@@ -21,10 +21,7 @@ const InputTextoMascara: FC<InputTextoMascaraProps> = ({ id, titulo, mascara, va
                 value={valor}
                 as={InputMask}
                 mask={mascara}
-                onChange={(e) => {
-                    console.log(e.target.value);
-                    setValor(e.target.value as string);
-                }}
+                onChange={(e) => setValor(e.target.value as string)}
                 aria-describedby={(textoDica) ? `${id}HelpBlock` : ""}
             />
 

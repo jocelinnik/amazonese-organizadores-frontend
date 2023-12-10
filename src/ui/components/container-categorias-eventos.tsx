@@ -1,11 +1,6 @@
-import {
-    forwardRef,
-    useImperativeHandle,
-    useState,
-    JSX,
-    Ref
-} from "react";
+import { forwardRef, useImperativeHandle, useState, JSX, Ref } from "react";
 import { Badge, Button, CloseButton, Col, Container, Row, Stack } from "react-bootstrap";
+
 import { InputTexto } from "./input-texto";
 
 type ContainerCategoriasEventosRefProps = {
@@ -31,7 +26,6 @@ const ContainerCategoriasEventos = forwardRef<ContainerCategoriasEventosRefProps
                 }
             ]);
             setCategoria("");
-            console.log(categorias);
         }
     };
     const removerCategoria = (idx: number): void => {
