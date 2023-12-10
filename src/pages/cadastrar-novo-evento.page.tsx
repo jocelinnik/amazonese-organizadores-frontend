@@ -15,11 +15,12 @@ import { AlertasContext } from "@/ui/context/alertas.context";
 import { AutenticacaoContext } from "@/ui/context/autenticacao.context";
 import { CarregandoGifContext } from "@/ui/context/carregando-gif.context";
 import { ROTAS_APP } from "@/ui/layout/routes";
+import { InputTextoMonetario } from "@/ui/components/input-texto-monetario";
 
 const CadastrarNovoEventoPage: FC = (): JSX.Element => {
     const [nome, setNome] = useState<string>("");
     const [descricao, setDescricao] = useState<string>("");
-    const [preco, setPreco] = useState<string>("");
+    const [preco, setPreco] = useState<number>(0);
     const [cidade, setCidade] = useState<string>("");
     const [uf, setUf] = useState<string>("");
     const [dataInicio, setDataInicio] = useState<Date>(new Date());
@@ -49,7 +50,7 @@ const CadastrarNovoEventoPage: FC = (): JSX.Element => {
         const dadosNovoEvento: NovoEventoDTO = {
             nome: nome,
             descricao: descricao,
-            preco: Number(preco.replace(",", ".")),
+            preco: preco,
             categorias: containerCategoriasEventosRef.current?.coletarCategorias() as string[],
             data_inicio: dataInicio,
             data_fim: dataFim,
@@ -79,10 +80,10 @@ const CadastrarNovoEventoPage: FC = (): JSX.Element => {
 
             <InputTextArea id="descricao" titulo="Descrição *" valor={descricao} setValor={setDescricao} />
 
-            {/* <InputTextArea id="categorias" titulo="Categorias *" valor={categorias} setValor={setCategorias} /> */}
             <ContainerCategoriasEventos ref={containerCategoriasEventosRef} />
 
-            <InputTexto id="preco" titulo="Preço da entrada *" valor={preco} setValor={setPreco} />
+            {/* <InputTexto id="preco" titulo="Preço da entrada *" valor={preco} setValor={setPreco} /> */}
+            <InputTextoMonetario id="preco" titulo="Preço da entrada *" valor={preco} setValor={setPreco} />
 
             <Row className="mb-3">
                 <Col xs={3}>

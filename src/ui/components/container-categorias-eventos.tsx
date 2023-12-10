@@ -58,11 +58,11 @@ const ContainerCategoriasEventos = forwardRef<ContainerCategoriasEventosRefProps
     return (
         <Container className="mb-3 px-0">
             <Row>
-                <Col xs={10}>
+                <Col xs={11}>
                     <InputTexto id="categoria" titulo="Adicionar uma categoria *" valor={categoria} setValor={setCategoria} />
                 </Col>
-                <Col xs={2} className="d-flex justify-content-start align-items-center">
-                    <Button variant="primary" onClick={adicionarCategoria} className="mt-3">Adicionar</Button>
+                <Col xs={1} className="d-flex justify-content-start align-items-center">
+                    <Button variant="primary" size="lg" onClick={adicionarCategoria} className="mt-2 fw-bold">+</Button>
                 </Col>
             </Row>
 
@@ -70,7 +70,7 @@ const ContainerCategoriasEventos = forwardRef<ContainerCategoriasEventosRefProps
                 <Stack direction="horizontal" gap={2} className="mb-3 px-0">
                     {categorias.map(cat => (
                         <Badge key={cat.idx} pill bg="primary" className="d-flex flex-row justify-content-evenly align-items-center">
-                            <span className="mx-3 fs-5">{cat.texto}</span>
+                            <span className="mx-3 fs-6">{cat.texto}</span>
                             <CloseButton variant="white" onClick={() => removerCategoria(cat.idx)} />
                         </Badge>
                     ))}
