@@ -1,0 +1,26 @@
+.menu-lateral {
+    overflow: hidden;
+
+    .saudacao-organizador {
+        font-size: 18px;
+        margin-bottom: 0;
+    }
+
+    .links-menu {
+        overflow-y: scroll;
+    
+        // Escondendo o scrollbar em navegadores baseados no Gecko
+        scrollbar-width: none;
+    
+        // Escondendo o scrollbar em navegadores baseados no WebKit
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    
+        .link-menu {
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    }
+}

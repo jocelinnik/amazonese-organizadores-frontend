@@ -77,9 +77,10 @@ const AutenticacaoProvider: FC<AutenticacaoProviderProps> = ({ children }): JSX.
             setOrganizador(resposta.organizador);
         }catch(e: any){
             const erro = e as Error;
+            console.error(erro);
 
             return {
-                tipo: "erro",
+                tipo: "ERRO",
                 texto: erro.message
             };
         }

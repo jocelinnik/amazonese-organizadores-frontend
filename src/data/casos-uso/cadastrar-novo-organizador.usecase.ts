@@ -47,12 +47,12 @@ class CadastrarNovoOrganizador {
                 senha_bruta: senha,
                 frase_secreta_bruta: fraseSecreta
             };
-            const resposta = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/organizadores/novo`, {
+            const resposta = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/organizadores`, {
                 method: "POST",
+                body: JSON.stringify(dadosNovoOrganizador),
                 headers: {
                     "Content-Type": "application/json; charset=utf-8"
-                },
-                body: JSON.stringify(dadosNovoOrganizador)
+                }
             });
 
             mensagem = await resposta.json() as Mensagem;
@@ -60,7 +60,7 @@ class CadastrarNovoOrganizador {
             const erro = e as Error;
 
             mensagem = {
-                tipo: "erro",
+                tipo: "ERRO",
                 texto: erro.message
             };
         }

@@ -8,9 +8,10 @@ type InputTextoProps = {
     setValor: Dispatch<SetStateAction<string>>;
     tamanhoMaximo?: number;
     textoDica?: string;
+    onEnterPressionado?: () => void;
 };
 
-const InputTexto: FC<InputTextoProps> = ({ id, titulo, valor, setValor, tamanhoMaximo, textoDica }): JSX.Element => {
+const InputTexto: FC<InputTextoProps> = ({ id, titulo, valor, setValor, tamanhoMaximo, textoDica, onEnterPressionado }): JSX.Element => {
 
     return (
         <Form.Group controlId={id} className="mb-3">
@@ -25,6 +26,10 @@ const InputTexto: FC<InputTextoProps> = ({ id, titulo, valor, setValor, tamanhoM
                     }else{
                         setValor(e.target.value as string);
                     }
+                }}
+                onKeyDown={(event) => {
+                    if(event.key === "Enter" && onEnterPressionado)
+                        onEnterPressionado();
                 }}
                 aria-describedby={(textoDica) ? `${id}HelpBlock` : ""}
             />

@@ -5,7 +5,7 @@ import "@fontsource/roboto/700.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-datepicker/dist/react-datepicker-cssmodules.css";
-import "@/ui/styles/global.css";
+import "@/ui/styles/global.scss";
 
 import ReactDOM from "react-dom/client";
 

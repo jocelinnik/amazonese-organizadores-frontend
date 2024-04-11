@@ -1,19 +1,19 @@
-import { NovoEventoDTO } from "@/data/dto/evento.dto";
+import { EditarEventoDTO } from "@/data/dto/evento.dto";
 import { Mensagem } from "@/data/dto/mensagem.dto";
 import { Validador } from "@/data/validadores/validador";
 import { ValidadorDatasEvento } from "@/data/validadores/implementacoes/datas-evento.validador";
 import { ValidadorPrecoEvento } from "@/data/validadores/implementacoes/preco-evento.validador";
 
-type CadastrarNovoEventoInput = {
-    dadosNovoEvento: NovoEventoDTO;
+type EditarEventoInput = {
+    dadosEditarEvento: EditarEventoDTO;
     tokenJWT: string;
-};
+}
 
-class CadastrarNovoEvento {
+class EditarEvento {
 
-    private static _instancia?: CadastrarNovoEvento;
+    private static _instancia?: EditarEvento;
 
-    private readonly _validacoes: Array<Validador<NovoEventoDTO>>;
+    private readonly _validacoes: Array<Validador<EditarEventoDTO>>;
 
     private constructor(){
         this._validacoes = [
@@ -22,25 +22,24 @@ class CadastrarNovoEvento {
         ];
     }
 
-    public async executar(input: CadastrarNovoEventoInput): Promise<Mensagem> {
+    public async executar(input: EditarEventoInput): Promise<Mensagem> {
         let mensagem: Mensagem;
 
         try{
-            const { dadosNovoEvento, tokenJWT } = input;
+            const { dadosEditarEvento, tokenJWT } = input;
 
             // Executando todas as regras de validação determinadas.
             // A ideia é que todas as regras de validação sejam 
             // executadas sem levantar nenhuma exceção. Caso alguma
             // regra levante uma exceção, significa que alguma 
-            // informação do novo evento não está em conformidade...
+            // informação do evento editado não está em conformidade...
             for(let validacao of this._validacoes)
-                validacao.validar(dadosNovoEvento);
+                validacao.validar(dadosEditarEvento);
 
-            // Enviando a requisição de registro do novo evento 
-            // para o backend...
-            const resposta = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/eventos`, {
-                method: "POST",
-                body: JSON.stringify(dadosNovoEvento),
+            // Enviando a requisição de edição evento para o backend...
+            const resposta = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/eventos/editar`, {
+                method: "PATCH",
+                body: JSON.stringify(dadosEditarEvento),
                 headers: {
                     "Content-Type": "application/json; charset=utf-8",
                     "Authorization": `Bearer ${tokenJWT}`
@@ -62,12 +61,12 @@ class CadastrarNovoEvento {
         return mensagem;
     }
 
-    public static singleton(): CadastrarNovoEvento {
-        if(!CadastrarNovoEvento._instancia)
-            CadastrarNovoEvento._instancia = new CadastrarNovoEvento();
+    public static singleton(): EditarEvento {
+        if(!EditarEvento._instancia)
+            EditarEvento._instancia = new EditarEvento();
 
-        return CadastrarNovoEvento._instancia;
+        return EditarEvento._instancia;
     }
 }
 
-export { CadastrarNovoEvento };
+export { EditarEvento };

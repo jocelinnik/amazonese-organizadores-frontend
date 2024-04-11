@@ -1,4 +1,4 @@
-import { DadosEventoDTO } from "@/data/dto/evento.dto";
+import { EventosDTO } from "@/data/dto/evento.dto";
 
 type BuscarEventosOrganizadorInput = {
     cpfOUcnpj: string;
@@ -11,17 +11,16 @@ class BuscarEventosOrganizador {
 
     private constructor(){}
 
-    public async executar(input: BuscarEventosOrganizadorInput): Promise<DadosEventoDTO[]> {
+    public async executar(input: BuscarEventosOrganizadorInput): Promise<EventosDTO> {
         const { cpfOUcnpj, tokenJWT } = input;
-        const resposta = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/eventos/${cpfOUcnpj}`, {
+        const resposta = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/eventos/organizador/${cpfOUcnpj}`, {
             headers: {
                 "Content-Type": "application/json; charset=utf-8",
                 "Authorization": `Bearer ${tokenJWT}`
             }
         });
-        const dadosEventos = await resposta.json();
 
-        return dadosEventos as DadosEventoDTO[];
+        return await resposta.json() as EventosDTO;
     }
 
     public static singleton(): BuscarEventosOrganizador {

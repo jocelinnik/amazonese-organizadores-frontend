@@ -1,33 +1,30 @@
 import { FC, JSX } from "react";
-import { Container } from "react-bootstrap";
 import { BrowserRouter } from "react-router-dom";
 
-import { Router } from "./routes";
-import { Cabecalho } from "@/ui/components/cabecalho";
-import { Rodape } from "@/ui/components/rodape";
 import { AlertasProvider } from "@/ui/context/alertas.context";
 import { AutenticacaoProvider } from "@/ui/context/autenticacao.context";
 import { CarregandoGifProvider } from "@/ui/context/carregando-gif.context";
-import styles from "@/ui/styles/layout/app.module.scss";
+import { Cabecalho } from "./cabecalho";
+import { Rodape } from "./rodape";
+import { Corpo } from "./corpo";
+import "@/ui/styles/layout/app.component.scss";
 
 const App: FC = (): JSX.Element => {
 
     return (
-        <div className={styles.containerLayout}>
-            <BrowserRouter>
-                <AutenticacaoProvider>
-                    <CarregandoGifProvider>
-                        <Cabecalho />
-                        <Container>
-                            <AlertasProvider>
-                                <Router />
-                            </AlertasProvider>
-                        </Container>
-                        <Rodape />
-                    </CarregandoGifProvider>
-                </AutenticacaoProvider>
-            </BrowserRouter>
-        </div>
+        <BrowserRouter>
+            <AutenticacaoProvider>
+                <CarregandoGifProvider>
+                    <AlertasProvider>
+                        <div className="principal">
+                            <Cabecalho />
+                            <Corpo />
+                            <Rodape />
+                        </div>
+                    </AlertasProvider>
+                </CarregandoGifProvider>
+            </AutenticacaoProvider>
+        </BrowserRouter>
     );
 };
 

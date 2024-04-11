@@ -14,15 +14,17 @@ const Alerta: FC<AlertaProps> = ({ mensagem }): JSX.Element => {
         <Toast
             show={mostrar}
             onClose={() => setMostrar(false)}
-            className="m-1"
-            bg={mensagem.tipo === "sucesso" ? "success" : "danger"}
+            autohide={true}
+            delay={3000}
+            className="m-2"
+            bg={mensagem.tipo === "SUCESSO" ? "success" : "danger"}
         >
             <Toast.Header>
                 <strong className="me-auto">{mensagem.tipo}</strong>
                 <small className="text-muted"></small>
             </Toast.Header>
 
-            <Toast.Body style={{ color: "#ffffff" }}>
+            <Toast.Body className="text-white">
                 {mensagem.texto}
             </Toast.Body>
         </Toast>

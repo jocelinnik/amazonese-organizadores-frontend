@@ -8,7 +8,7 @@ import { InputTextoMascara } from "@/ui/components/input-texto-mascara";
 import { InputSenha } from "@/ui/components/input-senha";
 import { AlertasContext } from "@/ui/context/alertas.context";
 import { CarregandoGifContext } from "@/ui/context/carregando-gif.context";
-import { ROTAS_APP } from "@/ui/layout/routes";
+import { rotasAplicacao } from "@/ui/layout/routes";
 
 const RedefinirSenhaOrganizadorPage: FC = (): JSX.Element => {
     const [digitaCpfCnpj, setDigitaCpfCnpj] = useState<"cpf" | "cnpj">("cpf");
@@ -21,6 +21,9 @@ const RedefinirSenhaOrganizadorPage: FC = (): JSX.Element => {
     const alertasContext = useContext(AlertasContext);
     const carregandoContext = useContext(CarregandoGifContext);
 
+    const onVoltar = async (): Promise<void> => {
+        navigate(-1);
+    };
     const onRedefinirSenhaOrganizador = async (): Promise<void> => {
         carregandoContext.exibir();
         
@@ -40,12 +43,12 @@ const RedefinirSenhaOrganizadorPage: FC = (): JSX.Element => {
         alertasContext.limparAlertas();
         alertasContext.adicionarAlerta(mensagem);
 
-        if(mensagem.tipo === "sucesso")
-            navigate(ROTAS_APP.PAGINA_REALIZAR_LOGIN, { replace: true });
+        if(mensagem.tipo === "SUCESSO")
+            navigate(rotasAplicacao.PAGINA_REALIZAR_LOGIN, { replace: true });
     };
 
     return (
-        <Container className="my-3">
+        <Container className="h-100 d-flex flex-column justify-content-center">
             <h2>Insira os dados necessários para redefinir a sua senha</h2>
 
             <div className="mb-3">
@@ -76,7 +79,10 @@ const RedefinirSenhaOrganizadorPage: FC = (): JSX.Element => {
                 </Col>
             </Row>
 
-            <Button size="lg" onClick={onRedefinirSenhaOrganizador}>Redefinir Senha</Button>
+            <div className="d-flex flex-row my-2 gap-2">
+                <Button size="lg" variant="secondary" onClick={onVoltar}>Voltar</Button>
+                <Button size="lg" className="ms-2" onClick={onRedefinirSenhaOrganizador}>Redefinir Senha</Button>
+            </div>
         </Container>
     );
 };

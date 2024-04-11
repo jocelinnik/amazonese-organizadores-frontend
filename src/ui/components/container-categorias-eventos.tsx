@@ -5,6 +5,7 @@ import { InputTexto } from "./input-texto";
 
 type ContainerCategoriasEventosRefProps = {
     coletarCategorias: () => string[];
+    recuperarCategorias: (categoriasEvento: string[]) => void;
 };
 type CategoriaRastreavel = {
     idx: number;
@@ -17,7 +18,7 @@ const ContainerCategoriasEventos = forwardRef<ContainerCategoriasEventosRefProps
 
     const adicionarCategoria = (): void => {
         if(categoria.length > 0){
-            const idx = categorias.length + 1;
+            const idx = categorias.length;
             setCategorias(current => [
                 ...current,
                 {
@@ -38,28 +39,37 @@ const ContainerCategoriasEventos = forwardRef<ContainerCategoriasEventosRefProps
             ]);
         }else if(idxCategoria === categorias.length - 1){
             setCategorias(current => [
-                ...(current.slice(0, current.length))
+                ...(current.slice(0, idxCategoria))
             ]);
         }else{
-            const inicio = categorias.slice(0, idxCategoria);
-            const fim = categorias.slice(idxCategoria + 1);
-            setCategorias(_ => [
-                ...inicio,
-                ...(fim.map(redefinirCategoria))
+            setCategorias(current => [
+                ...(current.slice(0, idxCategoria)),
+                ...(current.slice(idxCategoria + 1).map(redefinirCategoria))
             ]);
         }
     };
     const coletarCategorias = (): string[] => {
         return categorias.map(cat => cat.texto);
     };
+    const recuperarCategorias = (categoriasEvento: string[]): void => {
+        categoriasEvento.map((cat, i) => setCategorias(curr => [...curr, { idx: i, texto: cat }]));
+    };
 
-    useImperativeHandle(ref, () => ({ coletarCategorias }));
+    useImperativeHandle(ref, () => ({
+        coletarCategorias, recuperarCategorias
+    }));
 
     return (
         <Container className="mb-3 px-0">
             <Row>
                 <Col xs={11}>
-                    <InputTexto id="categoria" titulo="Adicionar uma categoria *" valor={categoria} setValor={setCategoria} />
+                    <InputTexto
+                        id="categoria_evento"
+                        titulo="Adicionar uma categoria *"
+                        valor={categoria}
+                        setValor={setCategoria}
+                        onEnterPressionado={adicionarCategoria}
+                    />
                 </Col>
                 <Col xs={1} className="d-flex justify-content-start align-items-center">
                     <Button variant="primary" size="lg" onClick={adicionarCategoria} className="mt-2 fw-bold">+</Button>

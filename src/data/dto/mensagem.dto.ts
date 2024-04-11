@@ -1,4 +1,4 @@
-type TipoMensagem = "sucesso" | "erro";
+type TipoMensagem = "SUCESSO" | "ERRO";
 
 interface Mensagem {
     tipo: TipoMensagem;

@@ -8,7 +8,7 @@ import { InputTextoMascara } from "@/ui/components/input-texto-mascara";
 import { AlertasContext } from "@/ui/context/alertas.context";
 import { AutenticacaoContext } from "@/ui/context/autenticacao.context";
 import { CarregandoGifContext } from "@/ui/context/carregando-gif.context";
-import { ROTAS_APP } from "@/ui/layout/routes";
+import { rotasAplicacao } from "@/ui/layout/routes";
 
 const LoginPage: FC = (): JSX.Element => {
     const [digitaCpfCnpj, setDigitaCpfCnpj] = useState<"cpf" | "cnpj">("cpf");
@@ -40,17 +40,14 @@ const LoginPage: FC = (): JSX.Element => {
             return;
         }
 
-        navigate(ROTAS_APP.PAGINA_INICIAL, { replace: true });
-    };
-    const onCriarPerfil = async (): Promise<void> => {
-        navigate(ROTAS_APP.PAGINA_CADASTRAR_NOVO_ORGANIZADOR);
+        navigate(rotasAplicacao.PAGINA_LISTAGEM_EVENTOS, { replace: true });
     };
     const onRedefinirSenha = async (): Promise<void> => {
-        navigate(ROTAS_APP.PAGINA_REDEFINIR_SENHA);
+        navigate(rotasAplicacao.PAGINA_REDEFINIR_SENHA);
     };
 
     return (
-        <Container className="my-3">
+        <Container className="h-100 d-flex flex-column justify-content-center">
             <h2>Entrar</h2>
 
             <div className="mb-3">
@@ -72,11 +69,10 @@ const LoginPage: FC = (): JSX.Element => {
 
             <InputSenha id="senha" titulo="Senha *" valor={senha} setValor={setSenha} />
 
-            <Container className="d-flex flex-row my-2">
+            <div className="d-flex flex-row my-2 gap-2">
                 <Button size="lg" onClick={onLogin}>Entrar</Button>
-                <Button variant="link" onClick={onCriarPerfil}>Criar Perfil</Button>
-                <Button variant="link" onClick={onRedefinirSenha}>Redefinir Senha</Button>
-            </Container>
+                <Button variant="outline-primary" onClick={onRedefinirSenha}>Redefinir Senha</Button>
+            </div>
         </Container>
     );
 };

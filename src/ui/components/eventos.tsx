@@ -1,25 +1,27 @@
-import { useContext, useEffect, useState, FC, JSX } from "react";
+import { FC, JSX } from "react";
 import { Card, Col, Container, Row } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
-import { BuscarEventosOrganizador } from "@/data/casos-uso/buscar-eventos-organizador.usecase";
-import { DadosEventoDTO } from "@/data/dto/evento.dto";
-import { AutenticacaoContext } from "@/ui/context/autenticacao.context";
-import { BuscandoElementos } from "./buscando-elementos";
+import { EventoDTO } from "@/data/dto/evento.dto";
+import { DateTimeUtils } from "@/data/utils/date-time-utils";
+import { rotasAplicacao } from "@/ui/layout/routes";
 
 type CardEventoProps = {
-    evento: DadosEventoDTO;
-    onClickEvento?: (evento: DadosEventoDTO) => Promise<void>;
+    evento: EventoDTO;
 };
 
-const CardEvento: FC<CardEventoProps> = ({ evento, onClickEvento }): JSX.Element => {
+const CardEvento: FC<CardEventoProps> = ({ evento }): JSX.Element => {
+    const navigate = useNavigate();
 
-    const onClickCard = async (): Promise<void> => {
-        if(onClickEvento)
-            await onClickEvento(evento);
+    const onDetalhesEvento = async (): Promise<void> => {
+        navigate(
+            rotasAplicacao.PAGINA_DETALHES_EVENTO.replace(":idEvento", evento.id),
+            { state: { ...evento } }
+        );
     };
 
     return (
-        <Card onClick={onClickCard}>
+        <Card onClick={onDetalhesEvento} style={{ cursor: "pointer" }}>
             <Card.Header>{`${evento.localidade.cidade}/${evento.localidade.uf}`}</Card.Header>
             <Card.Body>
                 <Card.Title>{evento.nome}</Card.Title>
@@ -27,58 +29,46 @@ const CardEvento: FC<CardEventoProps> = ({ evento, onClickEvento }): JSX.Element
                     {evento.descricao}
                 </Card.Text>
                 <Card.Footer className="d-flex flex-column">
-                    <small className="text-muted">Data de início: {`${new Date(evento.data_inicio).toLocaleDateString()}`}</small>
-                    <small className="text-muted">Data de encerramento: {`${new Date(evento.data_fim).toLocaleDateString()}`}</small>
+                    <small className="text-muted">
+                        Data de início: {`${DateTimeUtils.formatarDataPadraoBrasil(new Date(evento.datas_evento.data_inicio))}`}
+                    </small>
+                    <small className="text-muted">
+                        Data de encerramento: {`${DateTimeUtils.formatarDataPadraoBrasil(new Date(evento.datas_evento.data_fim))}`}
+                    </small>
                 </Card.Footer>
             </Card.Body>
         </Card>
     );
 };
 
-type ListagemEventosProps = {
-    onClickEvento?: (evento: DadosEventoDTO) => Promise<void>;
+type ContainerCardEventosProps = {
+    eventos: Array<EventoDTO>;
+    mensagemsemeventos: string;
 };
 
-const ListagemEventos: FC<ListagemEventosProps> = ({ onClickEvento }): JSX.Element => {
-    const [buscando, setBuscando] = useState<boolean>(true);
-    const [eventos, setEventos] = useState<DadosEventoDTO[]>([]);
-    const { organizador, getToken } = useContext(AutenticacaoContext);
-    
-    useEffect(() => {
-        (async () => {
-            setBuscando(true);
-
-            setTimeout(async () => {
-                const useCase = BuscarEventosOrganizador.singleton();
-                const token = await getToken();
-                const dadosEventos = await useCase.executar({
-                    cpfOUcnpj: organizador?.cpf_cnpj as string,
-                    tokenJWT: token.access_token as string
-                });
-
-                setEventos(() => [...dadosEventos]);
-                setBuscando(false);
-            }, 2000);
-        })();
-    }, []);
+const ContainerCardEventos: FC<ContainerCardEventosProps> = ({ eventos, mensagemsemeventos }): JSX.Element => {
 
     return (
-        <Container className="px-0">
+        <Container fluid className="p-2">
             {
-                (buscando)
-                    ? (<BuscandoElementos texto="Buscando seus eventos, aguarde..." />)
-                    : (
-                        <Row xs={1} md={2} lg={4} className="g-4">
+                (eventos.length > 0)
+                    ? (
+                        <Row xs={1} sm={2} md={3} lg={4} xl={5} className="g-4">
                             {eventos.map((evento) => (
                                 <Col key={evento.id} style={{ width: "20rem" }}>
-                                    <CardEvento evento={evento} onClickEvento={onClickEvento} />
+                                    <CardEvento evento={evento} />
                                 </Col>
                             ))}
                         </Row>
+                      )
+                    : (
+                        <div className="d-flex flex-column justify-content-center align-items-center">
+                            <p style={{ fontSize: 25, fontWeight: 500 }}>{mensagemsemeventos}</p>
+                        </div>
                       )
             }
         </Container>
     );
 };
 
-export { ListagemEventos };
+export { CardEvento, ContainerCardEventos };
