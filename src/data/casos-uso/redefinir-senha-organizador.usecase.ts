@@ -48,7 +48,7 @@ class RedefinirSenhaOrganizador {
             const erro = e as Error;
 
             mensagem = {
-                tipo: "erro",
+                tipo: "ERRO",
                 texto: erro.message
             };
         }
