@@ -15,11 +15,9 @@ const Cabecalho: FC = (): JSX.Element => {
 
     const onSair = async (): Promise<void> => {
         carregandoContext.exibir();
-        setTimeout(async () => {
-            await sair();
-            carregandoContext.esconder();
-            navigate(rotasAplicacao.PAGINA_REALIZAR_LOGIN, { replace: true });
-        }, 3000);
+        await sair();
+        carregandoContext.esconder();
+        navigate(rotasAplicacao.PAGINA_REALIZAR_LOGIN, { replace: true });
     };
 
     return (

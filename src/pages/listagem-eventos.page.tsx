@@ -16,17 +16,15 @@ const ListagemEventosPage: FC = (): JSX.Element => {
         (async () => {
             setBuscando(true);
 
-            setTimeout(async () => {
-                const useCase = BuscarEventosOrganizador.singleton();
-                const token = await getToken();
-                const dadosEventos = await useCase.executar({
-                    cpfOUcnpj: organizador?.cpf_cnpj as string,
-                    tokenJWT: token.access_token as string
-                });
+            const useCase = BuscarEventosOrganizador.singleton();
+            const token = await getToken();
+            const dadosEventos = await useCase.executar({
+                cpfOUcnpj: organizador?.cpf_cnpj as string,
+                tokenJWT: token.access_token as string
+            });
 
-                setEventosOrganizador(() => ({ ...dadosEventos }));
-                setBuscando(false);
-            }, 2000);
+            setEventosOrganizador(() => ({ ...dadosEventos }));
+            setBuscando(false);
         })();
     }, []);
 

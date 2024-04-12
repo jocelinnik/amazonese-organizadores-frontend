@@ -18,12 +18,10 @@ const ModalAdicionarImagemEvento = forwardRef<ModalAdicionarImagemEventoRefProps
     };
     const onSalvarImagem = async (): Promise<void> => {
         setSalvando(true);
-        setTimeout(async () => {
-            await salvarImagem(imagem as File);
-            limparInput();
-            fecharModal();
-            setSalvando(false);
-        }, 3000);
+        await salvarImagem(imagem as File);
+        limparInput();
+        fecharModal();
+        setSalvando(false);
     };
     const limparInput = (): void => {
         setImagem(undefined);
