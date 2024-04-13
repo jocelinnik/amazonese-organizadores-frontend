@@ -7,6 +7,7 @@ import {
     TokenOrganizadorDTO
 } from "@/data/dto/organizador.dto";
 import { Mensagem } from "@/data/dto/mensagem.dto";
+import { CacheService } from "@/data/services/cache";
 
 type AutenticacaoContextProps = {
     organizador?: DadosOrganizadorLogadoDTO;
@@ -29,6 +30,7 @@ const AutenticacaoContext = createContext({} as AutenticacaoContextProps);
 
 const AutenticacaoProvider: FC<AutenticacaoProviderProps> = ({ children }): JSX.Element => {
     const [organizador, setOrganizador] = useState<DadosOrganizadorLogadoDTO | undefined>(undefined);
+    const cacheService = CacheService.singleton();
 
     const autenticar = async (dadosLogin: LoginOrganizadorDTO): Promise<OrganizadorLogadoDTO | Mensagem> => {
         const resposta = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/organizadores/login`, {
@@ -71,9 +73,9 @@ const AutenticacaoProvider: FC<AutenticacaoProviderProps> = ({ children }): JSX.
                 return resposta as Mensagem;
             }
 
-            sessionStorage.setItem("@amazonese:dadoslogin", JSON.stringify(dadosLogin));
-            sessionStorage.setItem("@amazonese:token", JSON.stringify(resposta.token));
-            sessionStorage.setItem("@amazonese:organizador", JSON.stringify(resposta.organizador));
+            await cacheService.set("@amazonese:dadoslogin", dadosLogin);
+            await cacheService.set("@amazonese:token", resposta.token);
+            await cacheService.set("@amazonese:organizador", resposta.organizador);
             setOrganizador(resposta.organizador);
         }catch(e: any){
             const erro = e as Error;
@@ -86,29 +88,27 @@ const AutenticacaoProvider: FC<AutenticacaoProviderProps> = ({ children }): JSX.
         }
     };
     const getToken = async (): Promise<TokenOrganizadorDTO> => {
-        let token = JSON.parse(sessionStorage.getItem("@amazonese:token") as string) as TokenOrganizadorDTO;
+        let token = await cacheService.get<TokenOrganizadorDTO>("@amazonese:token") as TokenOrganizadorDTO
         if(Date.now() > token.expiracao){
             console.log("Token expirado, gerando um novo...");
-            const dadosLogin = JSON.parse(sessionStorage.getItem("@amazonese:dadoslogin") as string) as LoginOrganizadorDTO;
+            const dadosLogin = await cacheService.get<LoginOrganizadorDTO>("@amazonese:dadoslogin") as LoginOrganizadorDTO;
             const resposta = await autenticar(dadosLogin) as OrganizadorLogadoDTO;
-            sessionStorage.setItem("@amazonese:token", JSON.stringify(resposta.token));
+            await cacheService.set("@amazonese:token", resposta.token);
             token = resposta.token;
         }
 
         return token;
     };
     const sair = async (): Promise<void> => {
-        sessionStorage.removeItem("@amazonese:dadoslogin");
-        sessionStorage.removeItem("@amazonese:token");
-        sessionStorage.removeItem("@amazonese:organizador");
+        await cacheService.limpar();
         setOrganizador(undefined);
     };
 
     useEffect(() => {
-        const organizador = sessionStorage.getItem("@amazonese:organizador");
-
-        if(organizador)
-            setOrganizador(JSON.parse(organizador) as DadosOrganizadorLogadoDTO);
+        (async () => {
+            if(await cacheService.temChave("@amazonese:organizador"))
+                setOrganizador(await cacheService.get<DadosOrganizadorLogadoDTO>("@amazonese:organizador") as DadosOrganizadorLogadoDTO);
+        })();
     }, []);
 
     return (

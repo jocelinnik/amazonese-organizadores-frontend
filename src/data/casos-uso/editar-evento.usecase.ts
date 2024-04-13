@@ -37,7 +37,7 @@ class EditarEvento {
                 validacao.validar(dadosEditarEvento);
 
             // Enviando a requisição de edição evento para o backend...
-            const resposta = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/eventos/editar`, {
+            const resposta = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/eventos`, {
                 method: "PATCH",
                 body: JSON.stringify(dadosEditarEvento),
                 headers: {

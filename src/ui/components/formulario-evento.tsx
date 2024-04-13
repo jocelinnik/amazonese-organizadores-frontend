@@ -13,6 +13,7 @@ import { DatePickerForm } from "./datepicker";
 import { InputTexto } from "./input-texto";
 import { InputTextArea } from "./input-textarea";
 import { InputTextoMonetario } from "./input-texto-monetario";
+import { TimePickerForm } from "./timepicker";
 
 type FormularioEventoProps = {
     evento?: DadosEventoDTO;
@@ -21,6 +22,8 @@ type FormularioEventoProps = {
 };
 
 const FormularioEvento: FC<FormularioEventoProps> = ({ evento, onSubmeter, onVoltar }): JSX.Element => {
+    const [horaInicio, setHoraInicio] = useState<string>("08:00");
+    const [horaEncerramento, setHoraEncerramento] = useState<string>("09:00");
     const [nomeEvento, setNomeEvento] = useState<string>("");
     const [descricaoEvento, setDescricaoEvento] = useState<string>("");
     const [precoEntradaEvento, setPrecoEntradaEvento] = useState<number>(0);
@@ -42,7 +45,9 @@ const FormularioEvento: FC<FormularioEventoProps> = ({ evento, onSubmeter, onVol
             categorias: containerCategoriasEventosRef.current?.coletarCategorias() as string[],
             datas_evento: {
                 data_inicio: DateTimeUtils.formatarDataPadraoISO(dataInicioEvento),
-                data_fim: DateTimeUtils.formatarDataPadraoISO(dataFimEvento)
+                data_fim: DateTimeUtils.formatarDataPadraoISO(dataFimEvento),
+                hora_inicio: `${horaInicio}:00`,
+                hora_encerramento: `${horaEncerramento}:00`
             },
             localidade: {
                 cidade: cidadeEvento,
@@ -61,8 +66,10 @@ const FormularioEvento: FC<FormularioEventoProps> = ({ evento, onSubmeter, onVol
             setDescricaoEvento(evento.descricao);
             setPrecoEntradaEvento(evento.preco);
             setCidadeEvento(evento.localidade.cidade);
-            setDataInicioEvento(new Date(evento.datas_evento.data_inicio));
-            setDataFimEvento(new Date(evento.datas_evento.data_fim));
+            setDataInicioEvento(DateTimeUtils.formatarParaDate(evento.datas_evento.data_inicio));
+            setDataFimEvento(DateTimeUtils.formatarParaDate(evento.datas_evento.data_fim));
+            setHoraInicio(evento.datas_evento.hora_inicio);
+            setHoraEncerramento(evento.datas_evento.hora_encerramento);
             containerCategoriasEventosRef.current?.recuperarCategorias(evento.categorias);
         }
     };
@@ -90,11 +97,17 @@ const FormularioEvento: FC<FormularioEventoProps> = ({ evento, onSubmeter, onVol
                 </Form.Select>
             </Form.Group>
             <Row className="mb-3">
-                <Col>
+                <Col sm={6}>
                     <DatePickerForm id="data_inicio_evento" titulo="Data de início do evento *" valor={dataInicioEvento} setValor={setDataInicioEvento} />
                 </Col>
-                <Col>
+                <Col sm={6}>
                     <DatePickerForm id="data_fim_evento" titulo="Data de encerramento do evento *" valor={dataFimEvento} setValor={setDataFimEvento} />
+                </Col>
+                <Col sm={6}>
+                    <TimePickerForm id="hora_inicio" titulo="Hora de início *" valor={horaInicio} setValor={setHoraInicio} />
+                </Col>
+                <Col sm={6}>
+                    <TimePickerForm id="hora_encerramento" titulo="Hora de encerramento *" valor={horaEncerramento} setValor={setHoraEncerramento} />
                 </Col>
             </Row>
 

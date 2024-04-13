@@ -1,3 +1,5 @@
+import { DateTime } from "luxon";
+
 /**
  * 
  * Classe de funções utilitárias de objetos
@@ -6,6 +8,18 @@
  * @author Linnik Maciel <linnik.souza123@gmail.com>
  */
 class DateTimeUtils {
+
+    public static formatarParaDate(data: string): Date {
+        return (
+            DateTime
+                .fromFormat(
+                    data, 
+                    "yyyy-LL-dd",
+                    { zone: "America/Manaus" }
+                )
+                .toJSDate()
+        );
+    }
 
     /**
      * 
@@ -16,7 +30,11 @@ class DateTimeUtils {
      * @returns Data formatada.
      */
     public static formatarDataPadraoISO(data: Date): string {
-        return data.toISOString().split("T")[0];
+        return (
+            DateTime
+                .fromJSDate(data, { zone: "utc" })
+                .toFormat("yyyy-LL-dd")
+        );
     }
 
     /**
@@ -27,8 +45,28 @@ class DateTimeUtils {
      * @param data Objeto de data para formatar.
      * @returns Data formatada.
      */
-    public static formatarDataPadraoBrasil(data: Date): string {
-        return new Intl.DateTimeFormat("pt-BR").format(data);
+    public static formatarDataPadraoBrasil(data: string): string {
+        return (
+            DateTime
+                .fromFormat(
+                    data, 
+                    "yyyy-LL-dd",
+                    { zone: "America/Manaus" }
+                )
+                .toFormat("dd/LL/yyyy")
+        );
+    }
+
+    public static formatarHora(hora: string): string {
+        return (
+            DateTime
+                .fromFormat(
+                    hora,
+                    "HH:mm:ss",
+                    { zone: "America/Manaus" }
+                )
+                .toFormat("T")
+        )
     }
 }
 

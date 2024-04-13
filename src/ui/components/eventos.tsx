@@ -30,10 +30,10 @@ const CardEvento: FC<CardEventoProps> = ({ evento }): JSX.Element => {
                 </Card.Text>
                 <Card.Footer className="d-flex flex-column">
                     <small className="text-muted">
-                        Data de início: {`${DateTimeUtils.formatarDataPadraoBrasil(new Date(evento.datas_evento.data_inicio))}`}
+                        Data de início: {`${DateTimeUtils.formatarDataPadraoBrasil(evento.datas_evento.data_inicio)}`}
                     </small>
                     <small className="text-muted">
-                        Data de encerramento: {`${DateTimeUtils.formatarDataPadraoBrasil(new Date(evento.datas_evento.data_fim))}`}
+                        Data de encerramento: {`${DateTimeUtils.formatarDataPadraoBrasil(evento.datas_evento.data_fim)}`}
                     </small>
                 </Card.Footer>
             </Card.Body>

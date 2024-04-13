@@ -29,6 +29,8 @@ const CadastrarNovoEventoPage: FC = (): JSX.Element => {
             tokenJWT: token.access_token as string
         });
 
+        console.log(mensagem);
+
         carregandoContext.esconder();
         alertasContext.limparAlertas();
         alertasContext.adicionarAlerta(mensagem);

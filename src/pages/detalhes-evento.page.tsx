@@ -7,7 +7,7 @@ import { AdicionarImagemEvento } from "@/data/casos-uso/adicionar-imagem-evento.
 import { BuscarEventoPorId } from "@/data/casos-uso/buscar-evento-por-id.usecase";
 import { EventoDTO } from "@/data/dto/evento.dto";
 import { Mensagem } from "@/data/dto/mensagem.dto";
-import { DateTimeUtils } from "@/data/utils/date-time-utils";
+import { EventosUtils } from "@/data/utils/eventos-utils";
 import { MoedaUtils } from "@/data/utils/moeda-utils";
 import { ModalAdicionarImagemEvento, ModalAdicionarImagemEventoRefProps } from "@/ui/components/adicionar-imagem-evento";
 import { AlertasContext } from "@/ui/context/alertas.context";
@@ -140,12 +140,7 @@ const DetalhesEventoPage: FC = (): JSX.Element => {
 
                         <div className="mt-3">
                             <h5>Período de realização</h5>
-                            <p>
-                                {DateTimeUtils.formatarDataPadraoBrasil(new Date(evento.datas_evento.data_inicio))}
-                                {evento.datas_evento.data_fim !== evento.datas_evento.data_inicio && (
-                                    ` a ${DateTimeUtils.formatarDataPadraoBrasil(new Date(evento.datas_evento.data_fim))}`
-                                )}
-                            </p>
+                            <p>{EventosUtils.formatarPeriodoRealizacao(evento.datas_evento)}</p>
                         </div>
 
                         <div className="mt-3">
@@ -159,7 +154,13 @@ const DetalhesEventoPage: FC = (): JSX.Element => {
 
                     <div className="w-100 mt-auto pb-2 d-flex flex-row gap-2">
                         <Button size="lg" variant="secondary" onClick={onVoltar}>Voltar</Button>
-                        <Button size="lg" onClick={onAbrirEditarEvento}>Editar</Button>
+                        <Button
+                            size="lg"
+                            onClick={onAbrirEditarEvento}
+                            disabled={!EventosUtils.eventoVaiComecar(evento.datas_evento.data_inicio)}
+                        >
+                            Editar
+                        </Button>
                         <Button size="lg" variant="light" onClick={onAbrirModal}>Adicionar uma Imagem</Button>
                     </div>
                 </div>

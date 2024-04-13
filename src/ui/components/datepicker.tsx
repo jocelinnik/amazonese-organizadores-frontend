@@ -1,4 +1,5 @@
 import ptBR from "date-fns/locale/pt-BR";
+import { DateTime } from "luxon";
 import { Dispatch, FC, JSX, SetStateAction } from "react";
 import DatePicker from "react-datepicker";
 
@@ -25,7 +26,7 @@ const DatePickerForm: FC<DatePickerFormProps> = ({ id, titulo, valor, setValor }
                 onChange={onSelect}
                 dateFormat="P"
                 locale={ptBR}
-                minDate={valor}
+                minDate={DateTime.now().plus({ days: 1 }).toJSDate()}
             />
         </div>
     );

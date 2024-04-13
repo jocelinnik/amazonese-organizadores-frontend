@@ -9,9 +9,10 @@ type InputSenhaProps = {
     titulo: string;
     valor: string;
     setValor: Dispatch<SetStateAction<string>>;
+    onEnterPressionado?: () => void;
 };
 
-const InputSenha: FC<InputSenhaProps> = ({ id, titulo, valor, setValor }): JSX.Element => {
+const InputSenha: FC<InputSenhaProps> = ({ id, titulo, valor, setValor, onEnterPressionado }): JSX.Element => {
     const [mostrarSenha, setMostrarSenha] = useState<boolean>(false);
 
     return (
@@ -23,6 +24,10 @@ const InputSenha: FC<InputSenhaProps> = ({ id, titulo, valor, setValor }): JSX.E
                     type={mostrarSenha ? "text" : "password"}
                     value={valor}
                     onChange={(e) => setValor(e.target.value as string)}
+                    onKeyDown={(event) => {
+                        if(event.key === "Enter" && onEnterPressionado)
+                            onEnterPressionado();
+                    }}
                 />
 
                 <Button

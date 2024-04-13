@@ -1,5 +1,6 @@
-import { NovoEventoDTO } from "@/data/dto/evento.dto";
+import { EventoDTO, EventosDTO, NovoEventoDTO } from "@/data/dto/evento.dto";
 import { Mensagem } from "@/data/dto/mensagem.dto";
+import { CacheService } from "@/data/services/cache";
 import { Validador } from "@/data/validadores/validador";
 import { ValidadorDatasEvento } from "@/data/validadores/implementacoes/datas-evento.validador";
 import { ValidadorPrecoEvento } from "@/data/validadores/implementacoes/preco-evento.validador";
@@ -15,11 +16,14 @@ class CadastrarNovoEvento {
 
     private readonly _validacoes: Array<Validador<NovoEventoDTO>>;
 
+    private readonly _cacheService: CacheService;
+
     private constructor(){
         this._validacoes = [
             new ValidadorDatasEvento(),
             new ValidadorPrecoEvento()
         ];
+        this._cacheService = CacheService.singleton();
     }
 
     public async executar(input: CadastrarNovoEventoInput): Promise<Mensagem> {
@@ -47,9 +51,21 @@ class CadastrarNovoEvento {
                 }
             });
 
-            // Deserializando a resposta como um objeto de retorno
-            // com mensagem...
-            mensagem = await resposta.json() as Mensagem;
+            const resultado = await resposta.json();
+            if("tipo" in resultado)
+                return resultado as Mensagem;
+
+            const eventos = await this._cacheService.get<EventosDTO>("@amazonese:eventos") as EventosDTO;
+            eventos.eventos_para_iniciar = [
+                ...eventos.eventos_para_iniciar,
+                resultado as EventoDTO
+            ];
+            await this._cacheService.set("@amazonese:eventos", eventos);
+
+            return {
+                tipo: "SUCESSO",
+                texto: "Evento cadastrado com sucesso"
+            };
         }catch(e: any){
             // Escrevendo o texto da exceção em um objeto de mensagem...
             const erro = e as Error;
